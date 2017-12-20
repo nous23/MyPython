@@ -10,7 +10,7 @@ NoneMutualExchange = 'none mutual exchange'
 
 
 def main():
-    tests = list(range(4, 5))
+    tests = list(range(5, 6))
     print('simulation\n')
     for test in tests:
         result, n_arrangements = traverse_arrangements(test)
@@ -21,14 +21,41 @@ def main():
         n_all_mutual_exchange = len(result[AllMutualExchange])
         n_partial_mutual_exchange = len(result[PartialMutualExchange])
         n_none_mutual_exchange = len(result[NoneMutualExchange])
-        print('n_arrangements: ', n_arrangements, '\nsum: ', n_not_satisfied + n_all_mutual_exchange +
-              n_partial_mutual_exchange + n_none_mutual_exchange)
-        print('n_none_mutual_exchange: ', repr(n_none_mutual_exchange))
+        print(evaluate_options(result[NoneMutualExchange]))
+        print(n_all_mutual_exchange + n_partial_mutual_exchange + n_none_mutual_exchange)
+        # print('n_arrangements: ', n_arrangements, '\nsum: ', n_not_satisfied + n_all_mutual_exchange +
+        #       n_partial_mutual_exchange + n_none_mutual_exchange)
+        # print('n_none_mutual_exchange: ', repr(n_none_mutual_exchange))
 
-    print('\n\nanalysis\n')
-    for test in tests:
-        analysis_result = analysis(test)
-        print('n_none_mutual_exchange_analysis: ', repr(analysis_result[1]))
+    # print('\n\nanalysis\n')
+    # for test in tests:
+    #     analysis_result = analysis(test)
+    #     print('n_none_mutual_exchange_analysis: ', repr(analysis_result[1]))
+
+
+def evaluate_options(o_arra_list):
+    arra_list = o_arra_list
+    result = []
+    number = len(arra_list[0])
+    for i in range(number):
+        exist = []
+        for arra in arra_list:
+            if arra[i] in exist:
+                continue
+            else:
+                exist.append(arra[i])
+        crt = arra_list[0][i]
+        tmp_arra_list = []
+        for arra in arra_list:
+            if arra[i] == crt:
+                tmp_arra_list.append(arra)
+            else:
+                break
+        arra_list = tmp_arra_list
+        result.append(len(exist))
+    return result
+
+
 
 
 def traverse_arrangements(n_child):
@@ -54,11 +81,13 @@ def traverse_arrangements(n_child):
                 result_dic[NoneMutualExchange].append(arrangement)
 
     for k, v in result_dic.items():
-        if k == NoneMutualExchange:
-            print(k + '\n')
-            for arr in v:
-                print(arr)
-            print('\n')
+        # f = open('./arrangements.txt', 'w')
+        print(k + '\n')
+        for arr in v:
+            # f.writelines(repr(arr) + '\n')
+            print(arr)
+        print('\n')
+        # f.close()
 
     return result_dic, len(arrangements_list)
 
